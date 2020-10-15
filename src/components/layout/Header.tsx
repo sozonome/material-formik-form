@@ -1,6 +1,6 @@
 import React from "react";
 import { AppBar, Toolbar, Typography } from "@material-ui/core";
-import Head from "next/head"
+import Head from "next/head";
 
 const Header = () => {
   return (
