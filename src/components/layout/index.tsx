@@ -8,10 +8,7 @@ const Layout = ({ children }) => {
   return (
     <Grid>
       <Header />
-
       {children}
-
-      <Footer />
     </Grid>
   );
 };
