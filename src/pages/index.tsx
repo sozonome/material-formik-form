@@ -10,11 +10,14 @@ import {
   MenuItem,
   Button,
   CircularProgress,
-} from "@material-ui/core";
-import clsx from "clsx";
-import { useFormik, FormikErrors } from "formik";
-import { useEffect, useState } from "react";
-import axios from "axios";
+  TextareaAutosize,
+} from '@material-ui/core';
+import clsx from 'clsx';
+import { useFormik, FormikErrors } from 'formik';
+// import { useEffect, useState } from 'react';
+// import axios from 'axios';
+import { KeyboardDatePicker } from '@material-ui/pickers';
+import { DUMMY_EMPLOYEE_NAMES } from '../constants/dummyEmployees';
 
 const useStyles = makeStyles(
   createStyles({
@@ -25,10 +28,10 @@ const useStyles = makeStyles(
       padding: 12,
     },
     formControlWrapper: {
-      margin: "1rem 0",
+      margin: '1rem 0',
     },
     actionButtons: {
-      justifyContent: "flex-end",
+      justifyContent: 'flex-end',
     },
     card: {
       width: 275,
@@ -44,67 +47,83 @@ type Employee = {
   profile_image: string;
 };
 
+type ProductType = {
+  name: string;
+  unit: string;
+  quantity: number;
+  price: number;
+};
+
 type FormValueType = {
   name: string;
   distributionCenter: string;
   paymentType: string;
   expirationDate: string;
   notes: string;
-  productName: string;
-  unit: string;
-  quantity: number;
-  price: number;
+  products: Array<ProductType>;
 };
 
 const Home = () => {
   const classes = useStyles();
 
-  const { values, errors, handleChange, setFieldValue, dirty } = useFormik<
-    FormValueType
-  >({
+  const {
+    values,
+    errors,
+    handleChange,
+    setFieldValue,
+    dirty,
+    resetForm,
+  } = useFormik<FormValueType>({
     initialValues: {
-      name: "Hello",
-      distributionCenter: "",
-      paymentType: "",
-      expirationDate: "",
-      notes: "",
-      productName: "",
-      unit: "",
-      quantity: 0,
-      price: 0,
+      name: '',
+      distributionCenter: '',
+      paymentType: '',
+      expirationDate: new Date().toDateString(),
+      notes: '',
+      products: [{ name: '', unit: '', quantity: 0, price: 0 }],
     },
-    validate: (formValues) => {
+    validate: (formValues: FormValueType) => {
       const errorValidation: FormikErrors<FormValueType> = {};
 
       if (!formValues.name.length) {
-        errorValidation.name = "Name must be filled";
+        errorValidation.name = 'Name must be filled';
       }
       if (!formValues.distributionCenter.length) {
         errorValidation.distributionCenter =
-          "Distribution Center must be filled";
+          'Distribution Center must be filled';
       }
       if (!formValues.paymentType.length) {
-        errorValidation.paymentType = "Payment Type must be filled";
+        errorValidation.paymentType = 'Payment Type must be filled';
       }
       if (!formValues.expirationDate.length) {
-        errorValidation.expirationDate = "Expiration Date must be filled";
+        errorValidation.expirationDate = 'Expiration Date must be filled';
       }
-      if (!formValues.productName.length) {
-        errorValidation.productName = "Product Name must be filled";
-      }
-      if (!formValues.unit.length) {
-        errorValidation.unit = "Unit must be filled";
-      }
-      if (formValues.quantity === null || formValues.quantity === 0) {
-        errorValidation.quantity = "Quantity must be more than 0";
-      }
-      if (formValues.price === null || formValues.price === 0) {
-        errorValidation.price = "Price must be more than 0";
-      }
+
+      formValues.products.forEach((product, index) => {
+        if (!product.name.length) {
+          (errorValidation.products[index] as FormikErrors<ProductType>).name =
+            'Product Name must be filled';
+        }
+        if (!product.unit.length) {
+          (errorValidation.products[index] as FormikErrors<ProductType>).unit =
+            'Unit must be filled';
+        }
+        if (product.quantity === null || product.quantity === 0) {
+          (errorValidation.products[index] as FormikErrors<
+            ProductType
+          >).quantity = 'Quantity must be more than 0';
+        }
+        if (product.price === null || product.price === 0) {
+          (errorValidation.products[index] as FormikErrors<ProductType>).price =
+            'Price must be more than 0';
+        }
+      });
 
       return errorValidation;
     },
-    onSubmit: () => {},
+    onSubmit: (formValues: FormValueType) => {
+      console.log(formValues);
+    },
   });
 
   const {
@@ -113,28 +132,21 @@ const Home = () => {
     paymentType,
     expirationDate,
     notes,
-    productName,
-    unit,
-    quantity,
-    price,
+    products,
   } = values;
 
-  const [dummyNames, setDummyNames] = useState<Array<Employee>>([]);
-  const [totalPrice, setTotalPrice] = useState<number>(0);
+  // const [dummyNames, setDummyNames] = useState<Array<Employee>>([]);
 
-  const distributionCenters = ["DC Tangerang", "DC Cikarang"];
+  const distributionCenters = ['DC Tangerang', 'DC Cikarang'];
+  const paymentTypes = ['Bank Transfer', 'PayPal', 'GoPay', 'OVO'];
 
-  useEffect(() => {
-    axios("https://dummy.restapiexample.com/api/v1/employees")
-      .then((res) => {
-        setDummyNames(res.data.data);
-      })
-      .catch((err) => console.log(err));
-  }, []);
-
-  useEffect(() => {
-    setTotalPrice(quantity * price);
-  }, [price]);
+  // useEffect(() => {
+  //   axios('https://dummy.restapiexample.com/api/v1/employees')
+  //     .then((res) => {
+  //       setDummyNames(res.data.data);
+  //     })
+  //     .catch((err) => console.log(err));
+  // }, []);
 
   return (
     <Grid className={classes.wrapper}>
@@ -146,11 +158,11 @@ const Home = () => {
                 Detail
               </Grid>
               <Grid item xs={10}>
-                <FormControl fullWidth required style={{ width: "90%" }}>
+                <FormControl fullWidth required style={{ width: '90%' }}>
                   <InputLabel shrink>Name</InputLabel>
-                  <Select value={name} name="name" onChange={handleChange}>
-                    {dummyNames.length ? (
-                      dummyNames.map((dummyName: Employee) => (
+                  <Select value={name} name='name' onChange={handleChange}>
+                    {DUMMY_EMPLOYEE_NAMES.length ? (
+                      DUMMY_EMPLOYEE_NAMES.map((dummyName: Employee) => (
                         <MenuItem value={dummyName.employee_name}>
                           {dummyName.employee_name}
                         </MenuItem>
@@ -164,69 +176,93 @@ const Home = () => {
                 <FormControl
                   required
                   className={classes.formControlWrapper}
-                  style={{ width: "50%" }}
+                  style={{ width: '50%' }}
                 >
                   <InputLabel shrink>Distribution Center</InputLabel>
                   <Select
                     value={distributionCenter}
-                    name="distributionCenter"
+                    name='distributionCenter'
                     onChange={handleChange}
                   >
                     {name.length ? (
-                      distributionCenters.map((center: string) => (
-                        <MenuItem value={center}>{center}</MenuItem>
+                      distributionCenters.map((center: string, centerIndex) => (
+                        <MenuItem key={centerIndex} value={center}>
+                          {center}
+                        </MenuItem>
                       ))
                     ) : (
-                      <MenuItem value="">No Data Available</MenuItem>
+                      <MenuItem value=''>No Data Available</MenuItem>
                     )}
                   </Select>
                 </FormControl>
 
                 {name.length && distributionCenter.length ? (
-                  <Grid container>
-                    <Grid item xs={6}>
-                      <FormControl
-                        required
-                        className={classes.formControlWrapper}
-                        fullWidth
-                      >
-                        <InputLabel shrink>Payment Type</InputLabel>
-                        <Select
-                          value={distributionCenter}
-                          name="distributionCenter"
-                          onChange={handleChange}
+                  <Grid>
+                    <Grid container>
+                      <Grid item xs={6}>
+                        <FormControl
+                          required
+                          className={classes.formControlWrapper}
+                          fullWidth
                         >
-                          {name.length ? (
-                            distributionCenters.map((center: string) => (
-                              <MenuItem value={center}>{center}</MenuItem>
-                            ))
-                          ) : (
-                            <MenuItem value="">No Data Available</MenuItem>
-                          )}
-                        </Select>
-                      </FormControl>
+                          <InputLabel shrink>Payment Type</InputLabel>
+                          <Select
+                            value={paymentType}
+                            name='paymentType'
+                            onChange={handleChange}
+                          >
+                            {paymentTypes.map(
+                              (paymentType: string, paymentTypeIndex) => (
+                                <MenuItem
+                                  key={paymentTypeIndex}
+                                  value={paymentType}
+                                >
+                                  {paymentType}
+                                </MenuItem>
+                              )
+                            )}
+                          </Select>
+                        </FormControl>
+                      </Grid>
+                      <Grid item xs={6}>
+                        <FormControl
+                          required
+                          className={classes.formControlWrapper}
+                          fullWidth
+                        >
+                          <InputLabel shrink>Expired Date</InputLabel>
+                          <KeyboardDatePicker
+                            margin='normal'
+                            name='expirationDate'
+                            value={expirationDate}
+                            onChange={(date) =>
+                              setFieldValue('expirationDate', date)
+                            }
+                          />
+                        </FormControl>
+                      </Grid>
                     </Grid>
-                    <Grid item xs={6}>
-                      <FormControl
-                        required
-                        className={classes.formControlWrapper}
-                        fullWidth
-                      >
-                        <InputLabel shrink>Payment Type</InputLabel>
-                        <Select
-                          value={distributionCenter}
-                          name="distributionCenter"
-                          onChange={handleChange}
+
+                    <Grid container>
+                      <Grid item>
+                        <FormControl
+                          required
+                          className={classes.formControlWrapper}
+                          fullWidth
                         >
-                          {name.length ? (
-                            distributionCenters.map((center: string) => (
-                              <MenuItem value={center}>{center}</MenuItem>
-                            ))
-                          ) : (
-                            <MenuItem value="">No Data Available</MenuItem>
-                          )}
-                        </Select>
-                      </FormControl>
+                          <InputLabel shrink>Notes</InputLabel>
+                          <TextareaAutosize
+                            name='notes'
+                            value={notes}
+                            rowsMin={6}
+                            style={{
+                              maxWidth: '800px',
+                              minWidth: '60vw',
+                            }}
+                            onChange={handleChange}
+                          />
+                        </FormControl>
+                      </Grid>
                     </Grid>
                   </Grid>
                 ) : null}
@@ -237,7 +273,44 @@ const Home = () => {
 
             {name.length && distributionCenter.length ? (
               <Grid container className={classes.sectionWrapper}>
-                <Grid item>Products</Grid>
+                <Grid item xs={2}>
+                  Products
+                </Grid>
+
+                <Grid item xs={10}>
+                  {products.map(({name, unit, quantity}) => (
+                    <Grid>
+                      <Grid container>
+                        <Grid item>
+                          <FormControl
+                            fullWidth
+                            required
+                            style={{ width: '90%' }}
+                          >
+                            <InputLabel shrink>Name</InputLabel>
+                            <Select
+                              value={name}
+                              name='name'
+                              onChange={handleChange}
+                            >
+                              {DUMMY_EMPLOYEE_NAMES.length ? (
+                                DUMMY_EMPLOYEE_NAMES.map(
+                                  (dummyName: Employee) => (
+                                    <MenuItem value={dummyName.employee_name}>
+                                      {dummyName.employee_name}
+                                    </MenuItem>
+                                  )
+                                )
+                              ) : (
+                                <CircularProgress />
+                              )}
+                            </Select>
+                          </FormControl>
+                        </Grid>
+                      </Grid>
+                    </Grid>
+                  ))}
+                </Grid>
               </Grid>
             ) : null}
 
@@ -247,11 +320,12 @@ const Home = () => {
               container
               className={clsx(classes.sectionWrapper, classes.actionButtons)}
             >
+              <Button onClick={() => resetForm()}>Clear</Button>
               <Button>Cancel</Button>
               <Button
-                color="primary"
+                color='primary'
                 disabled={!dirty || (dirty && Object.keys(errors).length > 0)}
-                variant="contained"
+                variant='contained'
               >
                 Confirm
               </Button>
