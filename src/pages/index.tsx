@@ -4,20 +4,14 @@ import {
   makeStyles,
   Paper,
   Divider,
-  FormControl,
-  InputLabel,
-  Select,
-  MenuItem,
-  Button,
-  CircularProgress,
-  TextareaAutosize,
 } from '@material-ui/core';
-import clsx from 'clsx';
 import { useFormik, FormikErrors } from 'formik';
 // import { useEffect, useState } from 'react';
 // import axios from 'axios';
-import { KeyboardDatePicker } from '@material-ui/pickers';
-import { DUMMY_EMPLOYEE_NAMES } from '../constants/dummyEmployees';
+
+import Detail from '../components/sections/Detail';
+import Products from '../components/sections/Products';
+import Actions from '../components/sections/Actions';
 
 const useStyles = makeStyles(
   createStyles({
@@ -33,13 +27,10 @@ const useStyles = makeStyles(
     actionButtons: {
       justifyContent: 'flex-end',
     },
-    card: {
-      width: 275,
-    },
   })
 );
 
-type Employee = {
+export type Employee = {
   id: number;
   employee_name: string;
   employee_salary: number;
@@ -47,14 +38,14 @@ type Employee = {
   profile_image: string;
 };
 
-type ProductType = {
+export type ProductType = {
   name: string;
   unit: string;
   quantity: number;
   price: number;
 };
 
-type FormValueType = {
+export type FormValueType = {
   name: string;
   distributionCenter: string;
   paymentType: string;
@@ -78,7 +69,7 @@ const Home = () => {
       name: '',
       distributionCenter: '',
       paymentType: '',
-      expirationDate: new Date().toDateString(),
+      expirationDate: new Date().toLocaleDateString(),
       notes: '',
       products: [{ name: '', unit: '', quantity: 0, price: 0 }],
     },
@@ -137,9 +128,6 @@ const Home = () => {
 
   // const [dummyNames, setDummyNames] = useState<Array<Employee>>([]);
 
-  const distributionCenters = ['DC Tangerang', 'DC Cikarang'];
-  const paymentTypes = ['Bank Transfer', 'PayPal', 'GoPay', 'OVO'];
-
   // useEffect(() => {
   //   axios('https://dummy.restapiexample.com/api/v1/employees')
   //     .then((res) => {
@@ -151,185 +139,30 @@ const Home = () => {
   return (
     <Grid className={classes.wrapper}>
       <Grid>
+        {/* Wrapper */}
         <Paper className={classes.wrapper}>
           <Grid>
-            <Grid container className={classes.sectionWrapper}>
-              <Grid item xs={2}>
-                Detail
-              </Grid>
-              <Grid item xs={10}>
-                <FormControl fullWidth required style={{ width: '90%' }}>
-                  <InputLabel shrink>Name</InputLabel>
-                  <Select value={name} name='name' onChange={handleChange}>
-                    {DUMMY_EMPLOYEE_NAMES.length ? (
-                      DUMMY_EMPLOYEE_NAMES.map((dummyName: Employee) => (
-                        <MenuItem value={dummyName.employee_name}>
-                          {dummyName.employee_name}
-                        </MenuItem>
-                      ))
-                    ) : (
-                      <CircularProgress />
-                    )}
-                  </Select>
-                </FormControl>
-
-                <FormControl
-                  required
-                  className={classes.formControlWrapper}
-                  style={{ width: '50%' }}
-                >
-                  <InputLabel shrink>Distribution Center</InputLabel>
-                  <Select
-                    value={distributionCenter}
-                    name='distributionCenter'
-                    onChange={handleChange}
-                  >
-                    {name.length ? (
-                      distributionCenters.map((center: string, centerIndex) => (
-                        <MenuItem key={centerIndex} value={center}>
-                          {center}
-                        </MenuItem>
-                      ))
-                    ) : (
-                      <MenuItem value=''>No Data Available</MenuItem>
-                    )}
-                  </Select>
-                </FormControl>
-
-                {name.length && distributionCenter.length ? (
-                  <Grid>
-                    <Grid container>
-                      <Grid item xs={6}>
-                        <FormControl
-                          required
-                          className={classes.formControlWrapper}
-                          fullWidth
-                        >
-                          <InputLabel shrink>Payment Type</InputLabel>
-                          <Select
-                            value={paymentType}
-                            name='paymentType'
-                            onChange={handleChange}
-                          >
-                            {paymentTypes.map(
-                              (paymentType: string, paymentTypeIndex) => (
-                                <MenuItem
-                                  key={paymentTypeIndex}
-                                  value={paymentType}
-                                >
-                                  {paymentType}
-                                </MenuItem>
-                              )
-                            )}
-                          </Select>
-                        </FormControl>
-                      </Grid>
-                      <Grid item xs={6}>
-                        <FormControl
-                          required
-                          className={classes.formControlWrapper}
-                          fullWidth
-                        >
-                          <InputLabel shrink>Expired Date</InputLabel>
-                          <KeyboardDatePicker
-                            margin='normal'
-                            name='expirationDate'
-                            value={expirationDate}
-                            onChange={(date) =>
-                              setFieldValue('expirationDate', date)
-                            }
-                          />
-                        </FormControl>
-                      </Grid>
-                    </Grid>
-
-                    <Grid container>
-                      <Grid item>
-                        <FormControl
-                          required
-                          className={classes.formControlWrapper}
-                          fullWidth
-                        >
-                          <InputLabel shrink>Notes</InputLabel>
-                          <TextareaAutosize
-                            name='notes'
-                            value={notes}
-                            rowsMin={6}
-                            style={{
-                              maxWidth: '800px',
-                              minWidth: '60vw',
-                            }}
-                            onChange={handleChange}
-                          />
-                        </FormControl>
-                      </Grid>
-                    </Grid>
-                  </Grid>
-                ) : null}
-              </Grid>
-            </Grid>
+            {/* Detail Section */}
+            <Detail
+              name={name}
+              distributionCenter={distributionCenter}
+              paymentType={paymentType}
+              expirationDate={expirationDate}
+              notes={notes}
+              handleChange={handleChange}
+              setFieldValue={setFieldValue}
+            />
 
             <Divider />
 
+            {/* Product Section */}
             {name.length && distributionCenter.length ? (
-              <Grid container className={classes.sectionWrapper}>
-                <Grid item xs={2}>
-                  Products
-                </Grid>
-
-                <Grid item xs={10}>
-                  {products.map(({name, unit, quantity}) => (
-                    <Grid>
-                      <Grid container>
-                        <Grid item>
-                          <FormControl
-                            fullWidth
-                            required
-                            style={{ width: '90%' }}
-                          >
-                            <InputLabel shrink>Name</InputLabel>
-                            <Select
-                              value={name}
-                              name='name'
-                              onChange={handleChange}
-                            >
-                              {DUMMY_EMPLOYEE_NAMES.length ? (
-                                DUMMY_EMPLOYEE_NAMES.map(
-                                  (dummyName: Employee) => (
-                                    <MenuItem value={dummyName.employee_name}>
-                                      {dummyName.employee_name}
-                                    </MenuItem>
-                                  )
-                                )
-                              ) : (
-                                <CircularProgress />
-                              )}
-                            </Select>
-                          </FormControl>
-                        </Grid>
-                      </Grid>
-                    </Grid>
-                  ))}
-                </Grid>
-              </Grid>
+              <Products products={products} handleChange={handleChange} />
             ) : null}
 
             <Divider />
 
-            <Grid
-              container
-              className={clsx(classes.sectionWrapper, classes.actionButtons)}
-            >
-              <Button onClick={() => resetForm()}>Clear</Button>
-              <Button>Cancel</Button>
-              <Button
-                color='primary'
-                disabled={!dirty || (dirty && Object.keys(errors).length > 0)}
-                variant='contained'
-              >
-                Confirm
-              </Button>
-            </Grid>
+            <Actions errors={errors} dirty={dirty} resetForm={resetForm} />
           </Grid>
         </Paper>
       </Grid>
