@@ -4,15 +4,15 @@ import {
   makeStyles,
   Paper,
   Divider,
-} from '@material-ui/core';
-import { useFormik } from 'formik';
+} from "@material-ui/core";
+import { useFormik } from "formik";
 // import { useEffect, useState } from 'react';
 // import axios from 'axios';
-import * as yup from 'yup';
+import * as yup from "yup";
 
-import Detail from '../components/sections/Detail';
-import Products from '../components/sections/Products';
-import Actions from '../components/sections/Actions';
+import Detail from "../components/sections/Detail";
+import Products from "../components/sections/Products";
+import Actions from "../components/sections/Actions";
 
 const useStyles = makeStyles(
   createStyles({
@@ -23,10 +23,10 @@ const useStyles = makeStyles(
       padding: 12,
     },
     formControlWrapper: {
-      margin: '1rem 0',
+      margin: "1rem 0",
     },
     actionButtons: {
-      justifyContent: 'flex-end',
+      justifyContent: "flex-end",
     },
   })
 );
@@ -55,7 +55,7 @@ export type FormValueType = {
   products: Array<ProductType>;
 };
 
-const initProduct = { name: '', unit: '', qty: 0, price: 0 };
+const initProduct = { name: "", unit: "", qty: 0, price: 0 };
 
 const Home = () => {
   const classes = useStyles();
@@ -69,11 +69,11 @@ const Home = () => {
     resetForm,
   } = useFormik<FormValueType>({
     initialValues: {
-      name: '',
-      distributionCenter: '',
-      paymentType: '',
+      name: "",
+      distributionCenter: "",
+      paymentType: "",
       expirationDate: new Date().toLocaleDateString(),
-      notes: '',
+      notes: "",
       products: [initProduct],
     },
     validationSchema: yup.object().shape<FormValueType>({
@@ -107,7 +107,7 @@ const Home = () => {
 
   const addProduct = () => {
     const updateProducts = [...values.products, initProduct];
-    setFieldValue('products', updateProducts);
+    setFieldValue("products", updateProducts);
   };
 
   // const [dummyNames, setDummyNames] = useState<Array<Employee>>([]);

@@ -8,11 +8,11 @@ import {
   makeStyles,
   createStyles,
   TextareaAutosize,
-} from '@material-ui/core';
-import { KeyboardDatePicker } from '@material-ui/pickers';
-import React from 'react';
-import { DUMMY_EMPLOYEE_NAMES } from '../../constants/dummyDatas';
-import { Employee, FormValueType } from '../../pages';
+} from "@material-ui/core";
+import { KeyboardDatePicker } from "@material-ui/pickers";
+import React from "react";
+import { DUMMY_EMPLOYEE_NAMES } from "../../constants/dummyDatas";
+import { Employee, FormValueType } from "../../pages";
 
 const useStyles = makeStyles(
   createStyles({
@@ -20,20 +20,20 @@ const useStyles = makeStyles(
       padding: 12,
     },
     formControlWrapper: {
-      margin: '1rem 0',
+      margin: "1rem 0",
     },
   })
 );
 
-const distributionCenters = ['DC Tangerang', 'DC Cikarang'];
-const paymentTypes = ['Bank Transfer', 'PayPal', 'GoPay', 'OVO'];
+const distributionCenters = ["DC Tangerang", "DC Cikarang"];
+const paymentTypes = ["Bank Transfer", "PayPal", "GoPay", "OVO"];
 
 type DetailProps = {
   handleChange: any;
   setFieldValue: any;
 } & Pick<
   FormValueType,
-  'name' | 'distributionCenter' | 'paymentType' | 'expirationDate' | 'notes'
+  "name" | "distributionCenter" | "paymentType" | "expirationDate" | "notes"
 >;
 
 const Detail = ({
@@ -52,9 +52,14 @@ const Detail = ({
         Detail
       </Grid>
       <Grid item xs={10}>
-        <FormControl fullWidth required style={{ width: '90%' }}>
+        <FormControl fullWidth required style={{ width: "90%" }}>
           <InputLabel shrink>Name</InputLabel>
-          <Select value={name} name='name' placeholder="Name" onChange={handleChange}>
+          <Select
+            value={name}
+            name="name"
+            placeholder="Name"
+            onChange={handleChange}
+          >
             {DUMMY_EMPLOYEE_NAMES.length ? (
               DUMMY_EMPLOYEE_NAMES.map(
                 (dummyName: Employee, dummyEmployeeIndex) => (
@@ -75,12 +80,12 @@ const Detail = ({
         <FormControl
           required
           className={classes.formControlWrapper}
-          style={{ width: '50%' }}
+          style={{ width: "50%" }}
         >
           <InputLabel shrink>Distribution Center</InputLabel>
           <Select
             value={distributionCenter}
-            name='distributionCenter'
+            name="distributionCenter"
             onChange={handleChange}
             placeholder="Distribution Center"
           >
@@ -91,7 +96,7 @@ const Detail = ({
                 </MenuItem>
               ))
             ) : (
-              <MenuItem value=''>No Data Available</MenuItem>
+              <MenuItem value="">No Data Available</MenuItem>
             )}
           </Select>
         </FormControl>
@@ -108,7 +113,7 @@ const Detail = ({
                   <InputLabel shrink>Payment Type</InputLabel>
                   <Select
                     value={paymentType}
-                    name='paymentType'
+                    name="paymentType"
                     onChange={handleChange}
                     placeholder="Payment Type"
                   >
@@ -130,11 +135,11 @@ const Detail = ({
                 >
                   <InputLabel shrink>Expired Date</InputLabel>
                   <KeyboardDatePicker
-                    margin='normal'
-                    name='expirationDate'
+                    margin="normal"
+                    name="expirationDate"
                     value={expirationDate}
-                    format='dd/MM/yyyy'
-                    onChange={(date) => setFieldValue('expirationDate', date)}
+                    format="dd/MM/yyyy"
+                    onChange={(date) => setFieldValue("expirationDate", date)}
                     placeholder="Expired Date"
                   />
                 </FormControl>
@@ -146,12 +151,12 @@ const Detail = ({
                 <FormControl className={classes.formControlWrapper} fullWidth>
                   <InputLabel shrink>Notes</InputLabel>
                   <TextareaAutosize
-                    name='notes'
+                    name="notes"
                     value={notes}
                     rowsMin={6}
                     style={{
-                      maxWidth: '800px',
-                      minWidth: '60vw',
+                      maxWidth: "800px",
+                      minWidth: "60vw",
                     }}
                     onChange={handleChange}
                   />

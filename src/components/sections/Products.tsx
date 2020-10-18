@@ -10,11 +10,11 @@ import {
   MenuItem,
   Select,
   Typography,
-} from '@material-ui/core';
-import AddIcon from '@material-ui/icons/Add';
-import React, { useEffect } from 'react';
-import { DUMMY_PRODUCTS } from '../../constants/dummyDatas';
-import { ProductType } from '../../pages';
+} from "@material-ui/core";
+import AddIcon from "@material-ui/icons/Add";
+import React, { useEffect } from "react";
+import { DUMMY_PRODUCTS } from "../../constants/dummyDatas";
+import { ProductType } from "../../pages";
 
 const useStyles = makeStyles(
   createStyles({
@@ -22,7 +22,7 @@ const useStyles = makeStyles(
       padding: 12,
     },
     formControlWrapper: {
-      margin: '1rem 0',
+      margin: "1rem 0",
     },
     alignRight: {},
   })
@@ -90,7 +90,7 @@ const Products = ({
             <Grid container spacing={2}>
               {/* Name */}
               <Grid item xs={8}>
-                <FormControl fullWidth required style={{ width: '90%' }}>
+                <FormControl fullWidth required style={{ width: "90%" }}>
                   <InputLabel shrink>Product Name</InputLabel>
                   <Select
                     value={name}
@@ -111,7 +111,7 @@ const Products = ({
 
               {/* Unit */}
               <Grid item xs={4}>
-                <FormControl fullWidth required style={{ width: '90%' }}>
+                <FormControl fullWidth required style={{ width: "90%" }}>
                   <InputLabel shrink>Unit</InputLabel>
                   <Select
                     value={unit}
@@ -129,7 +129,7 @@ const Products = ({
                         </MenuItem>
                       ))
                     ) : (
-                      <MenuItem value=''>No Data Available</MenuItem>
+                      <MenuItem value="">No Data Available</MenuItem>
                     )}
                   </Select>
                 </FormControl>
@@ -142,7 +142,7 @@ const Products = ({
                 <FormControl fullWidth required>
                   <InputLabel shrink>Quantity</InputLabel>
                   <Input
-                    type='number'
+                    type="number"
                     name={`products[${productIndex}].qty`}
                     value={qty}
                     onChange={handleChange}
@@ -172,12 +172,12 @@ const Products = ({
                     Total Price
                   </InputLabel>
                   <Input
-                    type='number'
+                    type="number"
                     name={`products[${productIndex}].qty`}
                     value={qty * price}
                     disabled
                     inputProps={{
-                      style: { textAlign: 'right' },
+                      style: { textAlign: "right" },
                     }}
                   />
                 </FormControl>
@@ -187,18 +187,18 @@ const Products = ({
             <Grid
               container
               spacing={2}
-              style={{ marginTop: 12, justifyContent: 'flex-end' }}
+              style={{ marginTop: 12, justifyContent: "flex-end" }}
             >
               <Grid item xs={6}>
                 <Divider />
                 <Grid container>
                   <Grid item xs={6}>
-                    <Typography variant='inherit'>Total Nett Price</Typography>
+                    <Typography variant="inherit">Total Nett Price</Typography>
                   </Grid>
                   <Grid
                     item
                     xs={6}
-                    style={{ justifyContent: 'flex-end', textAlign: 'right' }}
+                    style={{ justifyContent: "flex-end", textAlign: "right" }}
                   >
                     <Typography>
                       <b>{qty * price}</b>
@@ -218,20 +218,22 @@ const Products = ({
         <Grid
           container
           spacing={2}
-          style={{ marginTop: 12, justifyContent: 'flex-end' }}
+          style={{ marginTop: 12, justifyContent: "flex-end" }}
         >
           <Grid item xs={6}>
             <Divider />
             <Grid container>
               <Grid item xs={6}>
-                <Typography variant='inherit'>Total</Typography>
+                <Typography variant="inherit">Total</Typography>
               </Grid>
               <Grid
                 item
                 xs={6}
-                style={{ justifyContent: 'flex-end', textAlign: 'right' }}
+                style={{ justifyContent: "flex-end", textAlign: "right" }}
               >
-                <Typography><b>{getTotalPrice()}</b></Typography>
+                <Typography>
+                  <b>{getTotalPrice()}</b>
+                </Typography>
               </Grid>
             </Grid>
           </Grid>
