@@ -1,6 +1,6 @@
-import { Button, createStyles, Grid, makeStyles } from '@material-ui/core';
-import clsx from 'clsx';
-import React from 'react';
+import { Button, createStyles, Grid, makeStyles } from "@material-ui/core";
+import clsx from "clsx";
+import React from "react";
 
 const useStyles = makeStyles(
   createStyles({
@@ -8,7 +8,7 @@ const useStyles = makeStyles(
       padding: 12,
     },
     actionButtons: {
-      justifyContent: 'flex-end',
+      justifyContent: "flex-end",
     },
   })
 );
@@ -30,9 +30,9 @@ const Actions = ({ dirty, resetForm, errors }: ActionsProps) => {
       <Button onClick={() => resetForm()}>Clear</Button>
       <Button>Cancel</Button>
       <Button
-        color='primary'
+        color="primary"
         disabled={!dirty || (dirty && Object.keys(errors).length > 0)}
-        variant='contained'
+        variant="contained"
       >
         Confirm
       </Button>
