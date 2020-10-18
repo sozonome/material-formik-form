@@ -13,7 +13,13 @@ const useStyles = makeStyles(
   })
 );
 
-const Actions = ({ dirty, resetForm, errors }) => {
+type ActionsProps = {
+  dirty: boolean;
+  resetForm: any;
+  errors: any;
+};
+
+const Actions = ({ dirty, resetForm, errors }: ActionsProps) => {
   const classes = useStyles();
 
   return (
@@ -25,7 +31,7 @@ const Actions = ({ dirty, resetForm, errors }) => {
       <Button>Cancel</Button>
       <Button
         color='primary'
-        disabled={!dirty || (dirty && Object.keys(errors).length > 0)}
+        disabled={Object.keys(errors).length > 0}
         variant='contained'
       >
         Confirm

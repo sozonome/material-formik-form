@@ -5,9 +5,10 @@ import {
   Paper,
   Divider,
 } from '@material-ui/core';
-import { useFormik, FormikErrors } from 'formik';
+import { useFormik } from 'formik';
 // import { useEffect, useState } from 'react';
 // import axios from 'axios';
+import * as yup from 'yup';
 
 import Detail from '../components/sections/Detail';
 import Products from '../components/sections/Products';
@@ -41,7 +42,7 @@ export type Employee = {
 export type ProductType = {
   name: string;
   unit: string;
-  quantity: number;
+  qty: number;
   price: number;
 };
 
@@ -53,6 +54,8 @@ export type FormValueType = {
   notes: string;
   products: Array<ProductType>;
 };
+
+const initProduct = { name: '', unit: '', qty: 0, price: 0 };
 
 const Home = () => {
   const classes = useStyles();
@@ -71,47 +74,23 @@ const Home = () => {
       paymentType: '',
       expirationDate: new Date().toLocaleDateString(),
       notes: '',
-      products: [{ name: '', unit: '', quantity: 0, price: 0 }],
+      products: [initProduct],
     },
-    validate: (formValues: FormValueType) => {
-      const errorValidation: FormikErrors<FormValueType> = {};
-
-      if (!formValues.name.length) {
-        errorValidation.name = 'Name must be filled';
-      }
-      if (!formValues.distributionCenter.length) {
-        errorValidation.distributionCenter =
-          'Distribution Center must be filled';
-      }
-      if (!formValues.paymentType.length) {
-        errorValidation.paymentType = 'Payment Type must be filled';
-      }
-      if (!formValues.expirationDate.length) {
-        errorValidation.expirationDate = 'Expiration Date must be filled';
-      }
-
-      formValues.products.forEach((product, index) => {
-        if (!product.name.length) {
-          (errorValidation.products[index] as FormikErrors<ProductType>).name =
-            'Product Name must be filled';
-        }
-        if (!product.unit.length) {
-          (errorValidation.products[index] as FormikErrors<ProductType>).unit =
-            'Unit must be filled';
-        }
-        if (product.quantity === null || product.quantity === 0) {
-          (errorValidation.products[index] as FormikErrors<
-            ProductType
-          >).quantity = 'Quantity must be more than 0';
-        }
-        if (product.price === null || product.price === 0) {
-          (errorValidation.products[index] as FormikErrors<ProductType>).price =
-            'Price must be more than 0';
-        }
-      });
-
-      return errorValidation;
-    },
+    validationSchema: yup.object().shape<FormValueType>({
+      name: yup.string().min(1).required(),
+      distributionCenter: yup.string().min(1).required(),
+      paymentType: yup.string().min(1).required(),
+      expirationDate: yup.string().required(),
+      notes: yup.string(),
+      products: yup.array().of(
+        yup.object().shape<ProductType>({
+          name: yup.string().min(1).required(),
+          unit: yup.string().min(1).required(),
+          qty: yup.number().min(1).required(),
+          price: yup.number(),
+        })
+      ),
+    }),
     onSubmit: (formValues: FormValueType) => {
       console.log(formValues);
     },
@@ -125,6 +104,11 @@ const Home = () => {
     notes,
     products,
   } = values;
+
+  const addProduct = () => {
+    const updateProducts = [...values.products, initProduct];
+    setFieldValue('products', updateProducts);
+  };
 
   // const [dummyNames, setDummyNames] = useState<Array<Employee>>([]);
 
@@ -157,7 +141,12 @@ const Home = () => {
 
             {/* Product Section */}
             {name.length && distributionCenter.length ? (
-              <Products products={products} handleChange={handleChange} />
+              <Products
+                products={products}
+                handleChange={handleChange}
+                setFieldValue={setFieldValue}
+                addProduct={addProduct}
+              />
             ) : null}
 
             <Divider />

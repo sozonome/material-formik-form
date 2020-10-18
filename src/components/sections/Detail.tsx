@@ -12,7 +12,7 @@ import {
 import { KeyboardDatePicker } from '@material-ui/pickers';
 import React from 'react';
 import { DUMMY_EMPLOYEE_NAMES } from '../../constants/dummyDatas';
-import { Employee } from '../../pages';
+import { Employee, FormValueType } from '../../pages';
 
 const useStyles = makeStyles(
   createStyles({
@@ -28,6 +28,14 @@ const useStyles = makeStyles(
 const distributionCenters = ['DC Tangerang', 'DC Cikarang'];
 const paymentTypes = ['Bank Transfer', 'PayPal', 'GoPay', 'OVO'];
 
+type DetailProps = {
+  handleChange: any;
+  setFieldValue: any;
+} & Pick<
+  FormValueType,
+  'name' | 'distributionCenter' | 'paymentType' | 'expirationDate' | 'notes'
+>;
+
 const Detail = ({
   handleChange,
   name,
@@ -36,7 +44,7 @@ const Detail = ({
   expirationDate,
   notes,
   setFieldValue,
-}) => {
+}: DetailProps) => {
   const classes = useStyles();
   return (
     <Grid container className={classes.sectionWrapper}>
@@ -46,7 +54,7 @@ const Detail = ({
       <Grid item xs={10}>
         <FormControl fullWidth required style={{ width: '90%' }}>
           <InputLabel shrink>Name</InputLabel>
-          <Select value={name} name='name' onChange={handleChange}>
+          <Select value={name} name='name' placeholder="Name" onChange={handleChange}>
             {DUMMY_EMPLOYEE_NAMES.length ? (
               DUMMY_EMPLOYEE_NAMES.map(
                 (dummyName: Employee, dummyEmployeeIndex) => (
@@ -74,8 +82,9 @@ const Detail = ({
             value={distributionCenter}
             name='distributionCenter'
             onChange={handleChange}
+            placeholder="Distribution Center"
           >
-            {name.length ? (
+            {name && name.length ? (
               distributionCenters.map((center: string, centerIndex) => (
                 <MenuItem key={centerIndex} value={center}>
                   {center}
@@ -87,7 +96,7 @@ const Detail = ({
           </Select>
         </FormControl>
 
-        {name.length && distributionCenter.length ? (
+        {name && name.length && distributionCenter.length ? (
           <Grid>
             <Grid container>
               <Grid item xs={6}>
@@ -101,6 +110,7 @@ const Detail = ({
                     value={paymentType}
                     name='paymentType'
                     onChange={handleChange}
+                    placeholder="Payment Type"
                   >
                     {paymentTypes.map(
                       (paymentType: string, paymentTypeIndex) => (
@@ -125,6 +135,7 @@ const Detail = ({
                     value={expirationDate}
                     format='dd/MM/yyyy'
                     onChange={(date) => setFieldValue('expirationDate', date)}
+                    placeholder="Expired Date"
                   />
                 </FormControl>
               </Grid>
