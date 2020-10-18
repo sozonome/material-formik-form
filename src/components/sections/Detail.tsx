@@ -10,6 +10,7 @@ import {
   TextareaAutosize,
 } from "@material-ui/core";
 import { KeyboardDatePicker } from "@material-ui/pickers";
+import { FormikErrors } from "formik";
 import React from "react";
 import { DUMMY_EMPLOYEE_NAMES } from "../../constants/dummyDatas";
 import { Employee, FormValueType } from "../../pages";
@@ -31,6 +32,7 @@ const paymentTypes = ["Bank Transfer", "PayPal", "GoPay", "OVO"];
 type DetailProps = {
   handleChange: any;
   setFieldValue: any;
+  errors: FormikErrors<FormValueType>;
 } & Pick<
   FormValueType,
   "name" | "distributionCenter" | "paymentType" | "expirationDate" | "notes"
@@ -44,6 +46,7 @@ const Detail = ({
   expirationDate,
   notes,
   setFieldValue,
+  errors,
 }: DetailProps) => {
   const classes = useStyles();
   return (
@@ -53,7 +56,9 @@ const Detail = ({
       </Grid>
       <Grid item xs={10}>
         <FormControl fullWidth required style={{ width: "90%" }}>
-          <InputLabel shrink>Name</InputLabel>
+          <InputLabel error={errors.name !== undefined} shrink>
+            Name
+          </InputLabel>
           <Select
             value={name}
             name="name"
@@ -82,7 +87,9 @@ const Detail = ({
           className={classes.formControlWrapper}
           style={{ width: "50%" }}
         >
-          <InputLabel shrink>Distribution Center</InputLabel>
+          <InputLabel error={errors.distributionCenter !== undefined} shrink>
+            Distribution Center
+          </InputLabel>
           <Select
             value={distributionCenter}
             name="distributionCenter"
@@ -110,7 +117,9 @@ const Detail = ({
                   className={classes.formControlWrapper}
                   fullWidth
                 >
-                  <InputLabel shrink>Payment Type</InputLabel>
+                  <InputLabel error={errors.paymentType !== undefined} shrink>
+                    Payment Type
+                  </InputLabel>
                   <Select
                     value={paymentType}
                     name="paymentType"
@@ -133,7 +142,12 @@ const Detail = ({
                   className={classes.formControlWrapper}
                   fullWidth
                 >
-                  <InputLabel shrink>Expired Date</InputLabel>
+                  <InputLabel
+                    error={errors.expirationDate !== undefined}
+                    shrink
+                  >
+                    Expired Date
+                  </InputLabel>
                   <KeyboardDatePicker
                     margin="normal"
                     name="expirationDate"

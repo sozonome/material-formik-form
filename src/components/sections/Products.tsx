@@ -12,9 +12,10 @@ import {
   Typography,
 } from "@material-ui/core";
 import AddIcon from "@material-ui/icons/Add";
+import { FormikErrors } from "formik";
 import React, { useEffect } from "react";
 import { DUMMY_PRODUCTS } from "../../constants/dummyDatas";
-import { ProductType } from "../../pages";
+import { FormValueType, ProductType } from "../../pages";
 
 const useStyles = makeStyles(
   createStyles({
@@ -24,7 +25,9 @@ const useStyles = makeStyles(
     formControlWrapper: {
       margin: "1rem 0",
     },
-    alignRight: {},
+    addButton: {
+      backgroundColor: "orange",
+    },
   })
 );
 
@@ -33,6 +36,7 @@ type ProductProps = {
   handleChange: any;
   setFieldValue: any;
   addProduct: () => void;
+  errors: FormikErrors<FormValueType>;
 };
 
 const Products = ({
@@ -40,6 +44,7 @@ const Products = ({
   handleChange,
   setFieldValue,
   addProduct,
+  errors,
 }: ProductProps) => {
   const classes = useStyles();
   // const getPrice = (productIndex: number) => {
@@ -77,6 +82,14 @@ const Products = ({
     });
   }, [products]);
 
+  const getError = (index: number) => {
+    if (errors.products) {
+      return errors.products[index] as FormikErrors<ProductType>;
+    } else {
+      return undefined;
+    }
+  };
+
   const handleChangeProductName = (
     event: React.ChangeEvent<{
       name?: string;
@@ -103,7 +116,15 @@ const Products = ({
               {/* Name */}
               <Grid item xs={8}>
                 <FormControl fullWidth required style={{ width: "90%" }}>
-                  <InputLabel shrink>Product Name</InputLabel>
+                  <InputLabel
+                    error={
+                      getError(productIndex) &&
+                      getError(productIndex).name !== undefined
+                    }
+                    shrink
+                  >
+                    Product Name
+                  </InputLabel>
                   <Select
                     value={name}
                     name={`products[${productIndex}].name`}
@@ -146,7 +167,15 @@ const Products = ({
               {/* Unit */}
               <Grid item xs={4}>
                 <FormControl fullWidth required style={{ width: "90%" }}>
-                  <InputLabel shrink>Unit</InputLabel>
+                  <InputLabel
+                    error={
+                      getError(productIndex) &&
+                      getError(productIndex).unit !== undefined
+                    }
+                    shrink
+                  >
+                    Unit
+                  </InputLabel>
                   <Select
                     value={unit}
                     name={`products[${productIndex}].unit`}
@@ -199,7 +228,15 @@ const Products = ({
             <Grid container spacing={2}>
               <Grid item xs={3}>
                 <FormControl fullWidth required>
-                  <InputLabel shrink>Quantity</InputLabel>
+                  <InputLabel
+                    error={
+                      getError(productIndex) &&
+                      getError(productIndex).qty !== undefined
+                    }
+                    shrink
+                  >
+                    Quantity
+                  </InputLabel>
                   <Input
                     type="number"
                     name={`products[${productIndex}].qty`}
@@ -218,12 +255,7 @@ const Products = ({
 
               <Grid item xs={6}>
                 <FormControl fullWidth required>
-                  <InputLabel
-                    shrink
-                    classes={{ formControl: classes.alignRight }}
-                  >
-                    Total Price
-                  </InputLabel>
+                  <InputLabel shrink>Total Price</InputLabel>
                   <Input
                     type="number"
                     name={`products[${productIndex}].qty`}
@@ -263,7 +295,7 @@ const Products = ({
           </Grid>
         ))}
 
-        <Button onClick={addProduct}>
+        <Button onClick={addProduct} className={classes.addButton}>
           New Item
           <AddIcon />
         </Button>

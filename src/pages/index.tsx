@@ -135,6 +135,7 @@ const Home = () => {
               notes={notes}
               handleChange={handleChange}
               setFieldValue={setFieldValue}
+              errors={errors}
             />
 
             <Divider />
@@ -146,6 +147,7 @@ const Home = () => {
                 handleChange={handleChange}
                 setFieldValue={setFieldValue}
                 addProduct={addProduct}
+                errors={errors}
               />
             ) : null}
 
