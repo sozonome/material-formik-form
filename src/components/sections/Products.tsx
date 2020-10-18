@@ -111,14 +111,34 @@ const Products = ({
                       handleChangeProductName(event, productIndex)
                     }
                   >
-                    {DUMMY_PRODUCTS.map((dummyProduct, dummyProductIndex) => (
-                      <MenuItem
-                        key={dummyProductIndex}
-                        value={dummyProduct.product_name}
-                      >
-                        {dummyProduct.product_name}
-                      </MenuItem>
-                    ))}
+                    {DUMMY_PRODUCTS
+                      // .filter((dummyProduct, checkIndex) => {
+                      // filter by selected product
+                      //   for (let i = 0; i < products.length; i++) {
+                      //     if (
+                      //       dummyProduct.product_name === products[i].name &&
+                      //       i !== productIndex
+                      //     ) {
+                      //       console.log('false', {
+                      //         productIndex,
+                      //         checkIndex,
+                      //         i,
+                      //         dummyName: dummyProduct.product_name,
+                      //         productName: products[i].name,
+                      //       });
+                      //       return false;
+                      //     }
+                      //   }
+                      //   return true;
+                      // })
+                      .map((dummyProduct, dummyProductIndex) => (
+                        <MenuItem
+                          key={dummyProductIndex}
+                          value={dummyProduct.product_name}
+                        >
+                          {dummyProduct.product_name}
+                        </MenuItem>
+                      ))}
                   </Select>
                 </FormControl>
               </Grid>
@@ -137,11 +157,36 @@ const Products = ({
                         (dummyProduct) =>
                           dummyProduct.product_name ===
                           products[productIndex].name
-                      )[0].units.map((unit, unitIndex) => (
-                        <MenuItem key={unitIndex} value={unit.name}>
-                          {unit.name}
-                        </MenuItem>
-                      ))
+                      )[0]
+                        .units.filter((filterUnit) => {
+                          for (let i = 0; i < products.length; i++) {
+                            for (let j = 0; j < DUMMY_PRODUCTS.length; j++) {
+                              if (
+                                products[i].name ===
+                                DUMMY_PRODUCTS[j].product_name
+                              ) {
+                                for (
+                                  let k = 0;
+                                  k < DUMMY_PRODUCTS[j].units.length;
+                                  k++
+                                ) {
+                                  if (
+                                    products[i].unit === filterUnit.name &&
+                                    i !== productIndex
+                                  ) {
+                                    return false;
+                                  }
+                                }
+                              }
+                            }
+                          }
+                          return true;
+                        })
+                        .map((unit, unitIndex) => (
+                          <MenuItem key={unitIndex} value={unit.name}>
+                            {unit.name}
+                          </MenuItem>
+                        ))
                     ) : (
                       <MenuItem value="">No Data Available</MenuItem>
                     )}

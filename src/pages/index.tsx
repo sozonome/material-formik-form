@@ -80,13 +80,13 @@ const Home = () => {
       name: yup.string().min(1).required(),
       distributionCenter: yup.string().min(1).required(),
       paymentType: yup.string().min(1).required(),
-      expirationDate: yup.string().required(),
+      expirationDate: yup.string().min(1).required(),
       notes: yup.string(),
       products: yup.array().of(
         yup.object().shape<ProductType>({
           name: yup.string().min(1).required(),
           unit: yup.string().min(1).required(),
-          qty: yup.number().min(1).required(),
+          qty: yup.number().moreThan(0).required(),
           price: yup.number(),
         })
       ),
