@@ -10,9 +10,9 @@ import { useFormik } from "formik";
 // import axios from 'axios';
 import * as yup from "yup";
 
-import Detail from "../components/sections/Detail";
-import Products from "../components/sections/Products";
-import Actions from "../components/sections/Actions";
+import Detail, { DetailProps } from "../components/sections/Detail";
+import Products, { ProductProps } from "../components/sections/Products";
+import Actions, { ActionsProps } from "../components/sections/Actions";
 
 const useStyles = makeStyles(
   createStyles({
@@ -120,40 +120,45 @@ const Home = () => {
   //     .catch((err) => console.log(err));
   // }, []);
 
+  const detailProps: DetailProps = {
+    name,
+    distributionCenter,
+    paymentType,
+    expirationDate,
+    notes,
+    handleChange,
+    setFieldValue,
+    errors,
+  };
+
+  const productProps: ProductProps = {
+    products,
+    handleChange,
+    setFieldValue,
+    addProduct,
+    errors,
+  };
+
+  const actionsProps: ActionsProps = {
+    errors,
+    dirty,
+    resetForm,
+  };
+
   return (
     <Grid className={classes.wrapper}>
       <Grid>
-        {/* Wrapper */}
         <Paper className={classes.wrapper}>
           <Grid>
-            {/* Detail Section */}
-            <Detail
-              name={name}
-              distributionCenter={distributionCenter}
-              paymentType={paymentType}
-              expirationDate={expirationDate}
-              notes={notes}
-              handleChange={handleChange}
-              setFieldValue={setFieldValue}
-              errors={errors}
-            />
-
+            <Detail {...detailProps} />
             <Divider />
 
-            {/* Product Section */}
             {name.length && distributionCenter.length ? (
-              <Products
-                products={products}
-                handleChange={handleChange}
-                setFieldValue={setFieldValue}
-                addProduct={addProduct}
-                errors={errors}
-              />
+              <Products {...productProps} />
             ) : null}
-
             <Divider />
 
-            <Actions errors={errors} dirty={dirty} resetForm={resetForm} />
+            <Actions {...actionsProps} />
           </Grid>
         </Paper>
       </Grid>

@@ -13,7 +13,7 @@ const useStyles = makeStyles(
   })
 );
 
-type ActionsProps = {
+export type ActionsProps = {
   dirty: boolean;
   resetForm: any;
   errors: any;

@@ -31,7 +31,7 @@ const useStyles = makeStyles(
   })
 );
 
-type ProductProps = {
+export type ProductProps = {
   products: Array<ProductType>;
   handleChange: any;
   setFieldValue: any;

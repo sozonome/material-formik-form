@@ -29,7 +29,7 @@ const useStyles = makeStyles(
 const distributionCenters = ["DC Tangerang", "DC Cikarang"];
 const paymentTypes = ["Bank Transfer", "PayPal", "GoPay", "OVO"];
 
-type DetailProps = {
+export type DetailProps = {
   handleChange: any;
   setFieldValue: any;
   errors: FormikErrors<FormValueType>;
